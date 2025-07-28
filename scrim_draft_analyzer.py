@@ -16,6 +16,14 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 import logging
 
+# Constants
+GRID_API_KEY = "YOUR_API_KEY"
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+TRACKING_FILE = "processed_scrims.json"
+DOWNLOADS_DIR = Path("./scrim_downloads")
+CREDENTIALS_FILE = "credentials.json"
+TOKEN_FILE = "token.pickle"
+
 # Add local packages to path (handle both Windows and Linux)
 possible_paths = [
     os.path.expanduser('~/.local/lib/python3.12/site-packages'),  # Linux
@@ -51,13 +59,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Constants
-GRID_API_KEY = "YOUR_API_KEY"
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-TRACKING_FILE = "processed_scrims.json"
-DOWNLOADS_DIR = Path("./scrim_downloads")
-CREDENTIALS_FILE = "credentials.json"
-TOKEN_FILE = "token.pickle"
+
 
 # Champion ID to name mapping (from extract_draft_info.py)
 CHAMPION_NAMES = {
