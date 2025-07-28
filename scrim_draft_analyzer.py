@@ -312,12 +312,24 @@ class ScrimDraftAnalyzer:
         seen_bans = set()
         player_champions = {}
         team_names = set()
+        winning_team = None
+        team_one_name = None
+        team_two_name = None
         
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 for line_num, line in enumerate(f, 1):
                     try:
                         data = json.loads(line)
+                        
+                        # Check for game end event
+                        if data.get('rfc461Schema') == 'game_end':
+                            winning_team_id = data.get('winningTeam')
+                            if winning_team_id == 100:
+                                winning_team = 'teamOne'
+                            elif winning_team_id == 200:
+                                winning_team = 'teamTwo'
+                            continue
                         
                         # Skip if not champion select state
                         if data.get('gameState') not in ['CHAMP_SELECT', 'PRE_CHAMP_SELECT']:
@@ -326,14 +338,22 @@ class ScrimDraftAnalyzer:
                         current_pick_turn = data.get('pickTurn', 0)
                         timestamp = data.get('rfc460Timestamp', '')
                         
-                        # Extract team names
-                        for team_key in ['teamOne', 'teamTwo']:
-                            if team_key in data and data[team_key]:
-                                for player in data[team_key]:
-                                    display_name = player.get('displayName', '')
-                                    if ' ' in display_name:
-                                        team_prefix = display_name.split()[0]
-                                        team_names.add(team_prefix)
+                        # Extract team names from teamOne and teamTwo
+                        if 'teamOne' in data and data['teamOne'] and not team_one_name:
+                            for player in data['teamOne']:
+                                display_name = player.get('displayName', '')
+                                if ' ' in display_name:
+                                    team_one_name = display_name.split()[0]
+                                    team_names.add(team_one_name)
+                                    break
+                        
+                        if 'teamTwo' in data and data['teamTwo'] and not team_two_name:
+                            for player in data['teamTwo']:
+                                display_name = player.get('displayName', '')
+                                if ' ' in display_name:
+                                    team_two_name = display_name.split()[0]
+                                    team_names.add(team_two_name)
+                                    break
                         
                         # Check for new bans
                         current_bans = data.get('bannedChampions', [])
@@ -356,9 +376,13 @@ class ScrimDraftAnalyzer:
                         # Check for picks
                         for team_key in ['teamOne', 'teamTwo']:
                             if team_key in data:
-                                team_name = list(team_names)[0] if len(team_names) > 0 else team_key
-                                if team_key == 'teamTwo' and len(team_names) > 1:
-                                    team_name = list(team_names)[1]
+                                # Use the actual team name based on which key we're processing
+                                if team_key == 'teamOne':
+                                    team_name = team_one_name or 'TeamOne'
+                                    team_side = 'Blue'
+                                else:
+                                    team_name = team_two_name or 'TeamTwo'
+                                    team_side = 'Red'
                                 
                                 for player in data[team_key]:
                                     participant_id = player['participantID']
@@ -376,6 +400,8 @@ class ScrimDraftAnalyzer:
                                                 'championID': champion_id,
                                                 'player': player['displayName'],
                                                 'team': team_name,
+                                                'team_key': team_key,
+                                                'team_side': team_side,
                                                 'timestamp': timestamp,
                                                 'line': line_num
                                             })
@@ -404,28 +430,31 @@ class ScrimDraftAnalyzer:
             blue_bans = [e for e in draft_events if e['type'] == 'ban' and e['team'] == 'Blue']
             red_bans = [e for e in draft_events if e['type'] == 'ban' and e['team'] == 'Red']
             
-            all_picks = [e for e in draft_events if e['type'] == 'pick']
-            team_names_list = list(team_names)
+            # Get picks by team_key (teamOne/teamTwo)
+            team_one_picks = [e for e in draft_events if e['type'] == 'pick' and e.get('team_key') == 'teamOne']
+            team_two_picks = [e for e in draft_events if e['type'] == 'pick' and e.get('team_key') == 'teamTwo']
             
-            team1_picks = []
-            team2_picks = []
-            
-            if len(team_names_list) >= 2:
-                team1_picks = [e for e in all_picks if e['team'] == team_names_list[0]]
-                team2_picks = [e for e in all_picks if e['team'] == team_names_list[1]]
+            # Determine winner based on winning_team
+            winner = None
+            if winning_team:
+                if winning_team == 'teamOne':
+                    winner = team_one_name or 'Blue Team'
+                elif winning_team == 'teamTwo':
+                    winner = team_two_name or 'Red Team'
             
             return {
                 'events': draft_events,
                 'blue_bans': [b['champion'] for b in blue_bans],
                 'red_bans': [b['champion'] for b in red_bans],
                 'team1': {
-                    'name': team_names_list[0] if team_names_list else 'Team1',
-                    'picks': [(p['player'], p['champion']) for p in team1_picks]
+                    'name': team_one_name or 'Team1',
+                    'picks': [(p['player'], p['champion']) for p in team_one_picks]
                 },
                 'team2': {
-                    'name': team_names_list[1] if len(team_names_list) > 1 else 'Team2',
-                    'picks': [(p['player'], p['champion']) for p in team2_picks]
-                }
+                    'name': team_two_name or 'Team2', 
+                    'picks': [(p['player'], p['champion']) for p in team_two_picks]
+                },
+                'winner': winner
             }
             
         except Exception as e:
@@ -489,6 +518,8 @@ class ScrimDraftAnalyzer:
             blue_picks[3] if len(blue_picks) > 3 else '',  # Blue pick 4
             blue_picks[4] if len(blue_picks) > 4 else '',  # Blue pick 5
             red_picks[4] if len(red_picks) > 4 else '',   # Red pick 5
+            # Winner
+            draft_data.get('winner', '')  # Winner column
         ]
         
         return row
@@ -511,7 +542,8 @@ class ScrimDraftAnalyzer:
                 'Blue Ban 1', 'Red Ban 1', 'Blue Ban 2', 'Red Ban 2', 'Blue Ban 3', 'Red Ban 3',
                 'Blue Pick 1', 'Red Pick 1', 'Red Pick 2', 'Blue Pick 2', 'Blue Pick 3', 'Red Pick 3',
                 'Red Ban 4', 'Blue Ban 4', 'Red Ban 5', 'Blue Ban 5',
-                'Red Pick 4', 'Blue Pick 4', 'Blue Pick 5', 'Red Pick 5'
+                'Red Pick 4', 'Blue Pick 4', 'Blue Pick 5', 'Red Pick 5',
+                'Winner'
             ]
             
             # Get current data to find where to append
@@ -591,7 +623,7 @@ class ScrimDraftAnalyzer:
                             "sheetId": 0,
                             "dimension": "COLUMNS",
                             "startIndex": 0,
-                            "endIndex": 24
+                            "endIndex": 25
                         }
                     }
                 }
