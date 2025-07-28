@@ -21,7 +21,7 @@ A Python script that automatically downloads League of Legends scrim data from G
 Install the following packages:
 
 ```bash
-pip install requests pendulum pygrid google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
+pip install requests pendulum grid-lol-client google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
 ```
 
 ## Setup Instructions

@@ -17,7 +17,7 @@ from typing import Dict, List, Any, Optional
 import logging
 
 # Constants
-GRID_API_KEY = "YOUR_API_KEY"
+GRID_API_KEY = "e5ikERczUjDeO6ReBanLlyZ4sc07dKNIOtVJcexP"
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 TRACKING_FILE = "processed_scrims.json"
 DOWNLOADS_DIR = Path("./scrim_downloads")
@@ -449,24 +449,46 @@ class ScrimDraftAnalyzer:
         team1 = draft_data['team1']
         team2 = draft_data['team2']
         
-        # Create row data
+        # Get bans and picks with proper ordering
+        blue_bans = draft_data['blue_bans']
+        red_bans = draft_data['red_bans']
+        blue_picks = [p[1] for p in team1['picks']]
+        red_picks = [p[1] for p in team2['picks']]
+        
+        # Create row data in the requested order:
+        # Blue ban 1, red ban 1, blue ban 2, red ban 2, blue ban 3, red ban 3,
+        # blue pick 1, red pick 1 and 2, blue pick 2 and 3, red pick 3,
+        # red ban 4, blue ban 4, red ban 5, blue ban 5,
+        # red pick 4, blue pick 4 and 5, red pick 5
         row = [
             series_id,
             series_date,
             team1['name'],
             team2['name'],
-            # Blue bans
-            *draft_data['blue_bans'][:5],  # Pad to 5
-            *([''] * (5 - len(draft_data['blue_bans']))),
-            # Red bans
-            *draft_data['red_bans'][:5],  # Pad to 5
-            *([''] * (5 - len(draft_data['red_bans']))),
-            # Team 1 picks (champion only)
-            *[p[1] for p in team1['picks'][:5]],
-            *([''] * (5 - len(team1['picks']))),
-            # Team 2 picks (champion only)
-            *[p[1] for p in team2['picks'][:5]],
-            *([''] * (5 - len(team2['picks']))),
+            # First ban phase (1-3)
+            blue_bans[0] if len(blue_bans) > 0 else '',  # Blue ban 1
+            red_bans[0] if len(red_bans) > 0 else '',   # Red ban 1
+            blue_bans[1] if len(blue_bans) > 1 else '',  # Blue ban 2
+            red_bans[1] if len(red_bans) > 1 else '',   # Red ban 2
+            blue_bans[2] if len(blue_bans) > 2 else '',  # Blue ban 3
+            red_bans[2] if len(red_bans) > 2 else '',   # Red ban 3
+            # First pick phase
+            blue_picks[0] if len(blue_picks) > 0 else '',  # Blue pick 1
+            red_picks[0] if len(red_picks) > 0 else '',   # Red pick 1
+            red_picks[1] if len(red_picks) > 1 else '',   # Red pick 2
+            blue_picks[1] if len(blue_picks) > 1 else '',  # Blue pick 2
+            blue_picks[2] if len(blue_picks) > 2 else '',  # Blue pick 3
+            red_picks[2] if len(red_picks) > 2 else '',   # Red pick 3
+            # Second ban phase (4-5)
+            red_bans[3] if len(red_bans) > 3 else '',   # Red ban 4
+            blue_bans[3] if len(blue_bans) > 3 else '',  # Blue ban 4
+            red_bans[4] if len(red_bans) > 4 else '',   # Red ban 5
+            blue_bans[4] if len(blue_bans) > 4 else '',  # Blue ban 5
+            # Second pick phase
+            red_picks[3] if len(red_picks) > 3 else '',   # Red pick 4
+            blue_picks[3] if len(blue_picks) > 3 else '',  # Blue pick 4
+            blue_picks[4] if len(blue_picks) > 4 else '',  # Blue pick 5
+            red_picks[4] if len(red_picks) > 4 else '',   # Red pick 5
         ]
         
         return row
@@ -483,13 +505,13 @@ class ScrimDraftAnalyzer:
                 return
         
         try:
-            # Prepare header row
+            # Prepare header row - matching the new column order
             headers = [
-                'Series ID', 'Date', 'Team 1', 'Team 2',
-                'Blue Ban 1', 'Blue Ban 2', 'Blue Ban 3', 'Blue Ban 4', 'Blue Ban 5',
-                'Red Ban 1', 'Red Ban 2', 'Red Ban 3', 'Red Ban 4', 'Red Ban 5',
-                'Team 1 Pick 1', 'Team 1 Pick 2', 'Team 1 Pick 3', 'Team 1 Pick 4', 'Team 1 Pick 5',
-                'Team 2 Pick 1', 'Team 2 Pick 2', 'Team 2 Pick 3', 'Team 2 Pick 4', 'Team 2 Pick 5'
+                'Series ID', 'Date', 'Blue Team', 'Red Team',
+                'Blue Ban 1', 'Red Ban 1', 'Blue Ban 2', 'Red Ban 2', 'Blue Ban 3', 'Red Ban 3',
+                'Blue Pick 1', 'Red Pick 1', 'Red Pick 2', 'Blue Pick 2', 'Blue Pick 3', 'Red Pick 3',
+                'Red Ban 4', 'Blue Ban 4', 'Red Ban 5', 'Blue Ban 5',
+                'Red Pick 4', 'Blue Pick 4', 'Blue Pick 5', 'Red Pick 5'
             ]
             
             # Get current data to find where to append
