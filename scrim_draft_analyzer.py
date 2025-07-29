@@ -13,8 +13,9 @@ import time
 import pickle
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Tuple
 import logging
+from itertools import permutations
 
 # Constants
 GRID_API_KEY = "e5ikERczUjDeO6ReBanLlyZ4sc07dKNIOtVJcexP"
@@ -61,25 +62,31 @@ logger = logging.getLogger(__name__)
 
 
 
-# Champion ID to name mapping (from extract_draft_info.py)
+# Champion ID to name mapping (complete list from Riot Data Dragon)
 CHAMPION_NAMES = {
-    1: "Annie", 2: "Olaf", 3: "Galio", 4: "Twisted Fate", 5: "Xin Zhao", 6: "Urgot", 7: "LeBlanc", 8: "Vladimir", 9: "Fiddlesticks", 10: "Kayle",
-    11: "Master Yi", 12: "Alistar", 13: "Ryze", 14: "Sion", 15: "Sivir", 16: "Soraka", 17: "Teemo", 18: "Tristana", 19: "Warwick", 20: "Nunu & Willump",
-    21: "Miss Fortune", 22: "Ashe", 23: "Tryndamere", 24: "Jax", 25: "Morgana", 26: "Zilean", 27: "Singed", 28: "Evelynn", 29: "Twitch", 30: "Karthus",
-    31: "Cho'Gath", 32: "Amumu", 33: "Rammus", 34: "Anivia", 35: "Shaco", 36: "Dr. Mundo", 37: "Sona", 38: "Kassadin", 39: "Irelia", 40: "Janna",
-    41: "Gangplank", 42: "Corki", 43: "Karma", 44: "Taric", 45: "Veigar", 48: "Trundle", 50: "Swain", 51: "Caitlyn", 53: "Blitzcrank", 54: "Malphite",
-    55: "Katarina", 56: "Nocturne", 57: "Maokai", 58: "Renekton", 59: "Jarvan IV", 60: "Elise", 61: "Orianna", 62: "Wukong", 63: "Brand", 64: "Lee Sin",
-    67: "Vayne", 68: "Rumble", 69: "Cassiopeia", 72: "Skarner", 74: "Heimerdinger", 75: "Nasus", 76: "Nidalee", 77: "Udyr", 78: "Poppy", 79: "Gragas",
-    80: "Pantheon", 81: "Ezreal", 82: "Mordekaiser", 83: "Yorick", 84: "Akali", 85: "Kennen", 86: "Garen", 89: "Leona", 90: "Malzahar", 91: "Talon",
-    92: "Riven", 96: "Kog'Maw", 98: "Shen", 99: "Lux", 101: "Xerath", 102: "Shyvana", 103: "Ahri", 104: "Graves", 105: "Fizz", 106: "Volibear",
-    107: "Rengar", 110: "Varus", 111: "Nautilus", 112: "Viktor", 113: "Sejuani", 114: "Fiora", 115: "Ziggs", 117: "Lulu", 119: "Draven", 120: "Hecarim",
-    121: "Kha'Zix", 122: "Darius", 126: "Jayce", 127: "Lissandra", 131: "Diana", 133: "Quinn", 134: "Syndra", 136: "Aurelion Sol", 141: "Kayn", 142: "Azir",
-    143: "Zyra", 145: "Kai'Sa", 147: "Seraphine", 150: "Gnar", 154: "Zac", 157: "Yasuo", 161: "Vel'Koz", 163: "Taliyah", 164: "Camille", 166: "Akshan",
-    200: "Bel'Veth", 201: "Braum", 202: "Jhin", 203: "Kindred", 221: "Zeri", 222: "Jinx", 223: "Tahm Kench", 234: "Viego", 235: "Senna", 236: "Lucian",
-    238: "Zed", 240: "Kled", 245: "Ekko", 246: "Qiyana", 254: "Vi", 266: "Aatrox", 267: "Nami", 268: "Azir", 350: "Yuumi", 360: "Samira", 412: "Thresh",
-    420: "Illaoi", 421: "Rek'Sai", 427: "Ivern", 429: "Kalista", 432: "Bard", 497: "Rakan", 498: "Xayah", 516: "Ornn", 517: "Sylas", 518: "Neeko",
-    523: "Aphelios", 526: "Rell", 555: "Pyke", 711: "Vex", 777: "Yone", 875: "Sett", 876: "Lillia", 887: "Gwen", 888: "Renata Glasc", 893: "Aurora",
-    895: "Nilah", 897: "K'Sante", 901: "Smolder", 910: "Hwei", 950: "Naafiri"
+    1: "Annie", 2: "Olaf", 3: "Galio", 4: "Twisted Fate", 5: "Xin Zhao", 6: "Urgot", 7: "LeBlanc", 8: "Vladimir", 
+    9: "Fiddlesticks", 10: "Kayle", 11: "Master Yi", 12: "Alistar", 13: "Ryze", 14: "Sion", 15: "Sivir", 16: "Soraka", 
+    17: "Teemo", 18: "Tristana", 19: "Warwick", 20: "Nunu & Willump", 21: "Miss Fortune", 22: "Ashe", 23: "Tryndamere", 
+    24: "Jax", 25: "Morgana", 26: "Zilean", 27: "Singed", 28: "Evelynn", 29: "Twitch", 30: "Karthus", 31: "Cho'Gath", 
+    32: "Amumu", 33: "Rammus", 34: "Anivia", 35: "Shaco", 36: "Dr. Mundo", 37: "Sona", 38: "Kassadin", 39: "Irelia", 
+    40: "Janna", 41: "Gangplank", 42: "Corki", 43: "Karma", 44: "Taric", 45: "Veigar", 48: "Trundle", 50: "Swain", 
+    51: "Caitlyn", 53: "Blitzcrank", 54: "Malphite", 55: "Katarina", 56: "Nocturne", 57: "Maokai", 58: "Renekton", 
+    59: "Jarvan IV", 60: "Elise", 61: "Orianna", 62: "Wukong", 63: "Brand", 64: "Lee Sin", 67: "Vayne", 68: "Rumble", 
+    69: "Cassiopeia", 72: "Skarner", 74: "Heimerdinger", 75: "Nasus", 76: "Nidalee", 77: "Udyr", 78: "Poppy", 
+    79: "Gragas", 80: "Pantheon", 81: "Ezreal", 82: "Mordekaiser", 83: "Yorick", 84: "Akali", 85: "Kennen", 86: "Garen", 
+    89: "Leona", 90: "Malzahar", 91: "Talon", 92: "Riven", 96: "Kog'Maw", 98: "Shen", 99: "Lux", 101: "Xerath", 
+    102: "Shyvana", 103: "Ahri", 104: "Graves", 105: "Fizz", 106: "Volibear", 107: "Rengar", 110: "Varus", 
+    111: "Nautilus", 112: "Viktor", 113: "Sejuani", 114: "Fiora", 115: "Ziggs", 117: "Lulu", 119: "Draven", 
+    120: "Hecarim", 121: "Kha'Zix", 122: "Darius", 126: "Jayce", 127: "Lissandra", 131: "Diana", 133: "Quinn", 
+    134: "Syndra", 136: "Aurelion Sol", 141: "Kayn", 142: "Zoe", 143: "Zyra", 145: "Kai'Sa", 147: "Seraphine", 
+    150: "Gnar", 154: "Zac", 157: "Yasuo", 161: "Vel'Koz", 163: "Taliyah", 164: "Camille", 166: "Akshan", 
+    200: "Bel'Veth", 201: "Braum", 202: "Jhin", 203: "Kindred", 221: "Zeri", 222: "Jinx", 223: "Tahm Kench", 
+    233: "Briar", 234: "Viego", 235: "Senna", 236: "Lucian", 238: "Zed", 240: "Kled", 245: "Ekko", 246: "Qiyana", 
+    254: "Vi", 266: "Aatrox", 267: "Nami", 268: "Azir", 350: "Yuumi", 360: "Samira", 412: "Thresh", 420: "Illaoi", 
+    421: "Rek'Sai", 427: "Ivern", 429: "Kalista", 432: "Bard", 497: "Rakan", 498: "Xayah", 516: "Ornn", 517: "Sylas", 
+    518: "Neeko", 523: "Aphelios", 526: "Rell", 555: "Pyke", 711: "Vex", 777: "Yone", 799: "Ambessa", 875: "Sett", 
+    876: "Lillia", 887: "Gwen", 888: "Renata Glasc", 893: "Aurora", 895: "Nilah", 897: "K'Sante", 901: "Smolder", 
+    902: "Milio", 910: "Hwei", 950: "Naafiri"
 }
 
 class ScrimDraftAnalyzer:
@@ -88,12 +95,42 @@ class ScrimDraftAnalyzer:
         self.spreadsheet_id = spreadsheet_id
         self.sheets_service = None
         self.processed_scrims = self.load_processed_scrims()
+        self.champion_role_data = self.load_champion_data()
         
         # Create directories
         DOWNLOADS_DIR.mkdir(exist_ok=True)
         (DOWNLOADS_DIR / "livestats").mkdir(exist_ok=True)
         (DOWNLOADS_DIR / "metadata").mkdir(exist_ok=True)
         
+    def load_champion_data(self) -> Dict[str, List[str]]:
+        """Load champion role data from champion-data.json."""
+        champion_file = Path("champion-data.json")
+        if champion_file.exists():
+            with open(champion_file, 'r') as f:
+                data = json.load(f)
+                # Create a mapping from champion name to roles
+                champion_roles = {}
+                for champ in data:
+                    # Normalize champion names (remove spaces, apostrophes)
+                    name = champ['name'].replace("'", "").replace(" ", "")
+                    # Map role names to our format
+                    roles = []
+                    for role in champ['roles']:
+                        if role == 'Top':
+                            roles.append('top')
+                        elif role == 'Jgl':
+                            roles.append('jungle')
+                        elif role == 'Mid':
+                            roles.append('mid')
+                        elif role == 'Adc':
+                            roles.append('adc')
+                        elif role == 'Sup':
+                            roles.append('supp')
+                    champion_roles[name.lower()] = roles
+                return champion_roles
+        logger.warning("champion-data.json not found, using fallback role detection")
+        return {}
+    
     def load_processed_scrims(self) -> Dict[str, Any]:
         """Load the tracking data for processed scrims."""
         if Path(TRACKING_FILE).exists():
@@ -303,8 +340,362 @@ class ScrimDraftAnalyzer:
             return []
     
     def get_champion_name(self, champion_id: int) -> str:
-        """Get champion name by ID."""
-        return CHAMPION_NAMES.get(champion_id, f"Champion_{champion_id}")
+        """Get champion name by ID with fallback to dynamic lookup."""
+        # First try the static mapping
+        if champion_id in CHAMPION_NAMES:
+            return CHAMPION_NAMES[champion_id]
+        
+        # If not found, log a warning and return a placeholder
+        logger.warning(f"Unknown champion ID: {champion_id}. Please update CHAMPION_NAMES dictionary.")
+        return f"Unknown_Champion_{champion_id}"
+    
+    def assign_team_roles(self, team_champions: List[Tuple[int, str, int]]) -> Dict[int, str]:
+        """
+        Assign roles to an entire team optimally based on champion preferences.
+        
+        Args:
+            team_champions: List of (participant_id, champion_name, champion_id) tuples
+            
+        Returns:
+            Dict mapping participant_id to role
+        """
+        # Required roles for a team
+        required_roles = ['top', 'jungle', 'mid', 'adc', 'supp']
+        
+        # Build champion role preferences
+        champion_roles = {}
+        participant_ids = []
+        
+        for pid, champ_name, champ_id in team_champions:
+            participant_ids.append(pid)
+            # Get normalized champion name
+            if champ_name == "Nunu & Willump":
+                normalized_name = "nunu"
+            elif champ_name == "Renata Glasc":
+                normalized_name = "renata"
+            elif champ_name == "Tahm Kench":
+                normalized_name = "tahmkench"
+            elif champ_name == "Twisted Fate":
+                normalized_name = "twistedfate"
+            elif champ_name == "Xin Zhao":
+                normalized_name = "xinzhao"
+            elif champ_name == "Master Yi":
+                normalized_name = "masteryi"
+            elif champ_name == "Miss Fortune":
+                normalized_name = "missfortune"
+            elif champ_name == "Dr. Mundo":
+                normalized_name = "drmundo"
+            elif champ_name == "Jarvan IV":
+                normalized_name = "jarvaniv"
+            elif champ_name == "Cho'Gath":
+                normalized_name = "chogath"
+            elif champ_name == "Kai'Sa":
+                normalized_name = "kaisa"
+            elif champ_name == "Kha'Zix":
+                normalized_name = "khazix"
+            elif champ_name == "Kog'Maw":
+                normalized_name = "kogmaw"
+            elif champ_name == "Lee Sin":
+                normalized_name = "leesin"
+            elif champ_name == "Bel'Veth":
+                normalized_name = "belveth"
+            elif champ_name == "Rek'Sai":
+                normalized_name = "reksai"
+            elif champ_name == "Vel'Koz":
+                normalized_name = "velkoz"
+            elif champ_name == "K'Sante":
+                normalized_name = "ksante"
+            elif champ_name == "Aurelion Sol":
+                normalized_name = "aurelionsol"
+            elif champ_name == "Wukong":
+                normalized_name = "monkeyking"
+            else:
+                normalized_name = champ_name.replace("'", "").replace(" ", "").lower()
+            
+            # Get possible roles from champion data
+            if normalized_name in self.champion_role_data:
+                champion_roles[pid] = self.champion_role_data[normalized_name]
+            else:
+                # Fallback to hardcoded role if available
+                role = self.get_champion_role(champ_id)
+                if role != "unknown":
+                    champion_roles[pid] = [role]
+                else:
+                    champion_roles[pid] = []
+        
+        # Score function for role assignment
+        def calculate_assignment_score(assignment):
+            score = 0
+            for pid, role in assignment.items():
+                # Check if champion can play this role
+                if pid in champion_roles and champion_roles[pid]:
+                    if role in champion_roles[pid]:
+                        # Higher score for primary role (first in list)
+                        role_index = champion_roles[pid].index(role)
+                        score += (10 - role_index * 2)  # 10 for primary, 8 for secondary, etc.
+                        
+                        # Bonus for position matching
+                        if (pid in [1, 6] and role == 'top') or \
+                           (pid in [2, 7] and role == 'jungle') or \
+                           (pid in [3, 8] and role == 'mid') or \
+                           (pid in [4, 9] and role == 'adc') or \
+                           (pid in [5, 10] and role == 'supp'):
+                            score += 3
+                    else:
+                        # Champion can't play this role, but might be forced to
+                        score += 1
+                else:
+                    # No role data, use position hint
+                    if (pid in [1, 6] and role == 'top') or \
+                       (pid in [2, 7] and role == 'jungle') or \
+                       (pid in [3, 8] and role == 'mid') or \
+                       (pid in [4, 9] and role == 'adc') or \
+                       (pid in [5, 10] and role == 'supp'):
+                        score += 5
+                    else:
+                        score += 2
+            return score
+        
+        # Try all possible role assignments
+        best_assignment = {}
+        best_score = -1
+        
+        # Generate all permutations of role assignments
+        for perm in permutations(required_roles):
+            assignment = dict(zip(participant_ids, perm))
+            score = calculate_assignment_score(assignment)
+            if score > best_score:
+                best_score = score
+                best_assignment = assignment
+        
+        # For any champion where the assigned role doesn't match their possible roles,
+        # and they have no roles in champion_roles, return empty string
+        final_assignment = {}
+        for pid, role in best_assignment.items():
+            if pid in champion_roles and champion_roles[pid]:
+                if role not in champion_roles[pid]:
+                    # Champion data exists but role doesn't match - ambiguous
+                    final_assignment[pid] = ""
+                else:
+                    final_assignment[pid] = role
+            else:
+                # No champion data, use the assigned role
+                final_assignment[pid] = role
+                
+        return final_assignment
+    
+    def get_champion_role_from_data(self, champion_name: str, participant_id: int) -> str:
+        """Get champion's role from champion-data.json, considering position context."""
+        # Normalize the champion name
+        # Handle special cases
+        if champion_name == "Nunu & Willump":
+            normalized_name = "nunu"
+        elif champion_name == "Renata Glasc":
+            normalized_name = "renata"
+        elif champion_name == "Tahm Kench":
+            normalized_name = "tahmkench"
+        elif champion_name == "Twisted Fate":
+            normalized_name = "twistedfate"
+        elif champion_name == "Xin Zhao":
+            normalized_name = "xinzhao"
+        elif champion_name == "Master Yi":
+            normalized_name = "masteryi"
+        elif champion_name == "Miss Fortune":
+            normalized_name = "missfortune"
+        elif champion_name == "Dr. Mundo":
+            normalized_name = "drmundo"
+        elif champion_name == "Jarvan IV":
+            normalized_name = "jarvaniv"
+        elif champion_name == "Cho'Gath":
+            normalized_name = "chogath"
+        elif champion_name == "Kai'Sa":
+            normalized_name = "kaisa"
+        elif champion_name == "Kha'Zix":
+            normalized_name = "khazix"
+        elif champion_name == "Kog'Maw":
+            normalized_name = "kogmaw"
+        elif champion_name == "Lee Sin":
+            normalized_name = "leesin"
+        elif champion_name == "Bel'Veth":
+            normalized_name = "belveth"
+        elif champion_name == "Rek'Sai":
+            normalized_name = "reksai"
+        elif champion_name == "Vel'Koz":
+            normalized_name = "velkoz"
+        elif champion_name == "K'Sante":
+            normalized_name = "ksante"
+        elif champion_name == "Aurelion Sol":
+            normalized_name = "aurelionsol"
+        elif champion_name == "Wukong":
+            normalized_name = "monkeyking"
+        else:
+            normalized_name = champion_name.replace("'", "").replace(" ", "").lower()
+        
+        if normalized_name in self.champion_role_data:
+            roles = self.champion_role_data[normalized_name]
+            
+            # If only one role, return it
+            if len(roles) == 1:
+                return roles[0]
+            
+            # If multiple roles, try to determine based on participant position
+            # Positions: 1,6=top | 2,7=jungle | 3,8=mid | 4,9=adc | 5,10=supp
+            if participant_id in [1, 6] and 'top' in roles:
+                return 'top'
+            elif participant_id in [2, 7] and 'jungle' in roles:
+                return 'jungle'
+            elif participant_id in [3, 8] and 'mid' in roles:
+                return 'mid'
+            elif participant_id in [4, 9] and 'adc' in roles:
+                return 'adc'
+            elif participant_id in [5, 10] and 'supp' in roles:
+                return 'supp'
+            
+            # If ambiguous (multiple roles but none match expected position), return empty
+            return ""
+        
+        return "unknown"
+    
+    def get_champion_role(self, champion_id: int) -> str:
+        """Get champion's primary role based on champion ID (fallback method)."""
+        # Champion role mappings based on typical competitive play
+        champion_roles = {
+            # Top lane champions
+            14: "top",    # Sion
+            36: "top",    # Dr. Mundo
+            266: "top",   # Aatrox
+            114: "top",   # Fiora
+            92: "top",    # Riven
+            58: "top",    # Renekton
+            75: "top",    # Nasus
+            150: "top",   # Gnar
+            83: "top",    # Yorick
+            86: "top",    # Garen
+            78: "jungle", # Poppy (flex jungle/top)
+            54: "top",    # Malphite
+            80: "top",    # Pantheon
+            98: "top",    # Shen
+            516: "top",   # Ornn
+            122: "top",   # Darius
+            240: "top",   # Kled
+            48: "top",    # Trundle
+            126: "top",   # Jayce
+            799: "top",   # Ambessa
+            
+            # Jungle champions
+            56: "jungle", # Nocturne
+            104: "jungle", # Graves
+            121: "jungle", # Kha'Zix
+            64: "jungle",  # Lee Sin
+            113: "jungle", # Sejuani
+            60: "jungle",  # Elise
+            107: "jungle", # Rengar
+            154: "jungle", # Zac
+            11: "jungle",  # Master Yi
+            120: "jungle", # Hecarim
+            427: "jungle", # Ivern
+            203: "jungle", # Kindred
+            421: "jungle", # Rek'Sai
+            233: "jungle", # Briar
+            
+            # Mid lane champions
+            163: "mid",   # Taliyah  
+            99: "mid",    # Lux
+            1: "mid",     # Annie
+            103: "mid",   # Ahri  
+            134: "mid",   # Syndra
+            34: "mid",    # Anivia
+            61: "mid",    # Orianna
+            157: "mid",   # Yasuo
+            238: "mid",   # Zed
+            268: "mid",   # Azir
+            142: "mid",   # Zoe
+            127: "mid",   # Lissandra
+            7: "mid",     # LeBlanc
+            38: "mid",    # Kassadin
+            245: "mid",   # Ekko
+            84: "mid",    # Akali
+            131: "mid",   # Diana
+            517: "mid",   # Sylas
+            910: "mid",   # Hwei
+            893: "mid",   # Aurora (new mid champion)
+            
+            # ADC champions  
+            145: "adc",   # Kai'Sa
+            523: "adc",   # Aphelios
+            22: "adc",    # Ashe
+            51: "adc",    # Caitlyn
+            81: "adc",    # Ezreal
+            222: "adc",   # Jinx
+            21: "adc",    # Miss Fortune
+            18: "adc",    # Tristana
+            236: "adc",   # Lucian
+            119: "adc",   # Draven
+            110: "adc",   # Varus
+            96: "adc",    # Kog'Maw
+            202: "adc",   # Jhin
+            429: "adc",   # Kalista
+            498: "adc",   # Xayah
+            221: "adc",   # Zeri
+            895: "adc",   # Nilah
+            901: "adc",   # Smolder
+            
+            # Support champions
+            32: "supp",   # Ammu
+            117: "supp",  # Lulu
+            12: "supp",   # Alistar
+            40: "supp",   # Janna
+            16: "supp",   # Soraka
+            89: "supp",   # Leona
+            412: "supp",  # Thresh
+            111: "supp",  # Nautilus
+            432: "supp",  # Bard
+            267: "supp",  # Nami
+            25: "supp",   # Morgana
+            37: "supp",   # Sona
+            223: "supp",  # Tahm Kench
+            201: "supp",  # Braum
+            143: "supp",  # Zyra
+            555: "supp",  # Pyke
+            497: "supp",  # Rakan
+            526: "supp",  # Rell
+            235: "supp",  # Senna
+            350: "supp",  # Yuumi
+            888: "supp",  # Renata Glasc
+            902: "supp",  # Milio
+        }
+        
+        return champion_roles.get(champion_id, "unknown")
+    
+    def determine_role(self, participant_id: int, spell1: int, spell2: int, team_key: str, champion_id: int = 0, champion_name: str = "") -> str:
+        """Determine player role based on champion and participant ID."""
+        
+        # Primary: Use champion-data.json if available
+        if champion_name and self.champion_role_data:
+            role = self.get_champion_role_from_data(champion_name, participant_id)
+            if role != "unknown":
+                return role
+        
+        # Secondary: Use hardcoded champion-based role detection
+        if champion_id > 0:
+            champion_role = self.get_champion_role(champion_id)
+            if champion_role != "unknown":
+                return champion_role
+        
+        # Fallback: Standard participant ID mapping (1-based from game data)
+        # Based on the actual game data: 1,6=top | 2,7=jungle | 3,8=mid | 4,9=adc | 5,10=supp
+        if participant_id in [1, 6]:
+            return "top"
+        elif participant_id in [2, 7]:
+            return "jungle"
+        elif participant_id in [3, 8]:
+            return "mid"
+        elif participant_id in [4, 9]:
+            return "adc"
+        elif participant_id in [5, 10]:
+            return "supp"
+        else:
+            return "unknown"
     
     def extract_draft_from_file(self, file_path: Path) -> Dict[str, Any]:
         """Extract draft information from a JSONL file."""
@@ -315,6 +706,12 @@ class ScrimDraftAnalyzer:
         winning_team = None
         team_one_name = None
         team_two_name = None
+        
+        # Collect team compositions for role assignment
+        team_one_composition = {}  # participant_id -> (champion_name, champion_id)
+        team_two_composition = {}  # participant_id -> (champion_name, champion_id)
+        team_one_players = {}  # participant_id -> player_name
+        team_two_players = {}  # participant_id -> player_name
         
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
@@ -393,6 +790,14 @@ class ScrimDraftAnalyzer:
                                             player_champions[participant_id] = champion_id
                                             champion_name = self.get_champion_name(champion_id)
                                             
+                                            # Store composition for later role assignment
+                                            if team_key == 'teamOne':
+                                                team_one_composition[participant_id] = (champion_name, champion_id)
+                                                team_one_players[participant_id] = player['displayName']
+                                            else:
+                                                team_two_composition[participant_id] = (champion_name, champion_id)
+                                                team_two_players[participant_id] = player['displayName']
+                                            
                                             draft_events.append({
                                                 'type': 'pick',
                                                 'pickTurn': player['pickTurn'],
@@ -402,6 +807,8 @@ class ScrimDraftAnalyzer:
                                                 'team': team_name,
                                                 'team_key': team_key,
                                                 'team_side': team_side,
+                                                'participant_id': participant_id,
+                                                'role': 'TBD',  # Will be assigned later
                                                 'timestamp': timestamp,
                                                 'line': line_num
                                             })
@@ -409,6 +816,12 @@ class ScrimDraftAnalyzer:
                                             # Champion swap
                                             player_champions[participant_id] = champion_id
                                             champion_name = self.get_champion_name(champion_id)
+                                            
+                                            # Update composition
+                                            if team_key == 'teamOne':
+                                                team_one_composition[participant_id] = (champion_name, champion_id)
+                                            else:
+                                                team_two_composition[participant_id] = (champion_name, champion_id)
                                             
                                             # Update existing pick
                                             for event in draft_events:
@@ -422,6 +835,29 @@ class ScrimDraftAnalyzer:
                         
                     except json.JSONDecodeError:
                         continue
+            
+            # Assign roles to teams based on optimal composition
+            if team_one_composition:
+                team_one_list = [(pid, comp[0], comp[1]) for pid, comp in team_one_composition.items()]
+                team_one_roles = self.assign_team_roles(team_one_list)
+                
+                # Update draft events with assigned roles
+                for event in draft_events:
+                    if event['type'] == 'pick' and event['team_key'] == 'teamOne':
+                        pid = event['participant_id']
+                        if pid in team_one_roles:
+                            event['role'] = team_one_roles[pid]
+            
+            if team_two_composition:
+                team_two_list = [(pid, comp[0], comp[1]) for pid, comp in team_two_composition.items()]
+                team_two_roles = self.assign_team_roles(team_two_list)
+                
+                # Update draft events with assigned roles
+                for event in draft_events:
+                    if event['type'] == 'pick' and event['team_key'] == 'teamTwo':
+                        pid = event['participant_id']
+                        if pid in team_two_roles:
+                            event['role'] = team_two_roles[pid]
             
             # Sort events by pickTurn
             draft_events.sort(key=lambda x: x['pickTurn'])
@@ -448,11 +884,11 @@ class ScrimDraftAnalyzer:
                 'red_bans': [b['champion'] for b in red_bans],
                 'team1': {
                     'name': team_one_name or 'Team1',
-                    'picks': [(p['player'], p['champion']) for p in team_one_picks]
+                    'picks': [(p['player'], p['champion'], p['role']) for p in team_one_picks]
                 },
                 'team2': {
                     'name': team_two_name or 'Team2', 
-                    'picks': [(p['player'], p['champion']) for p in team_two_picks]
+                    'picks': [(p['player'], p['champion'], p['role']) for p in team_two_picks]
                 },
                 'winner': winner
             }
@@ -483,6 +919,10 @@ class ScrimDraftAnalyzer:
         red_bans = draft_data['red_bans']
         blue_picks = [p[1] for p in team1['picks']]
         red_picks = [p[1] for p in team2['picks']]
+        
+        # Get roles for each pick
+        blue_roles = [p[2] for p in team1['picks']]
+        red_roles = [p[2] for p in team2['picks']]
         
         # Create row data in the requested order:
         # Blue ban 1, red ban 1, blue ban 2, red ban 2, blue ban 3, red ban 3,
@@ -519,7 +959,18 @@ class ScrimDraftAnalyzer:
             blue_picks[4] if len(blue_picks) > 4 else '',  # Blue pick 5
             red_picks[4] if len(red_picks) > 4 else '',   # Red pick 5
             # Winner
-            draft_data.get('winner', '')  # Winner column
+            draft_data.get('winner', ''),  # Winner column
+            # Role columns
+            blue_roles[0] if len(blue_roles) > 0 else '',  # Blue Role 1
+            blue_roles[1] if len(blue_roles) > 1 else '',  # Blue Role 2
+            blue_roles[2] if len(blue_roles) > 2 else '',  # Blue Role 3
+            blue_roles[3] if len(blue_roles) > 3 else '',  # Blue Role 4
+            blue_roles[4] if len(blue_roles) > 4 else '',  # Blue Role 5
+            red_roles[0] if len(red_roles) > 0 else '',   # Red Role 1
+            red_roles[1] if len(red_roles) > 1 else '',   # Red Role 2
+            red_roles[2] if len(red_roles) > 2 else '',   # Red Role 3
+            red_roles[3] if len(red_roles) > 3 else '',   # Red Role 4
+            red_roles[4] if len(red_roles) > 4 else '',   # Red Role 5
         ]
         
         return row
@@ -543,7 +994,9 @@ class ScrimDraftAnalyzer:
                 'Blue Pick 1', 'Red Pick 1', 'Red Pick 2', 'Blue Pick 2', 'Blue Pick 3', 'Red Pick 3',
                 'Red Ban 4', 'Blue Ban 4', 'Red Ban 5', 'Blue Ban 5',
                 'Red Pick 4', 'Blue Pick 4', 'Blue Pick 5', 'Red Pick 5',
-                'Winner'
+                'Winner',
+                'Blue Role 1', 'Blue Role 2', 'Blue Role 3', 'Blue Role 4', 'Blue Role 5',
+                'Red Role 1', 'Red Role 2', 'Red Role 3', 'Red Role 4', 'Red Role 5'
             ]
             
             # Get current data to find where to append
@@ -623,7 +1076,7 @@ class ScrimDraftAnalyzer:
                             "sheetId": 0,
                             "dimension": "COLUMNS",
                             "startIndex": 0,
-                            "endIndex": 25
+                            "endIndex": 35
                         }
                     }
                 }

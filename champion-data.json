@@ -1,0 +1,1267 @@
+[
+  {
+    "name": "Aatrox",
+    "roles": [
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Ambessa",
+    "roles": [
+      "Top",
+      "Mid"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Ahri",
+    "roles": [
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Akali",
+    "roles": [
+      "Mid",
+      "Top"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Alistar",
+    "roles": [
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Amumu",
+    "roles": [
+      "Jgl",
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Anivia",
+    "roles": [
+      "Mid",
+      "Top"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Annie",
+    "roles": [
+      "Mid",
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Aphelios",
+    "roles": [
+      "Adc"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Ashe",
+    "roles": [
+      "Adc"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Aurora",
+    "roles": [
+      "Mid",
+      "Top"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "AurelionSol",
+    "roles": [
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Azir",
+    "roles": [
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Bard",
+    "roles": [
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Belveth",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Blitzcrank",
+    "roles": [
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Brand",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Braum",
+    "roles": [
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Caitlyn",
+    "roles": [
+      "Adc"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Camille",
+    "roles": [
+      "Top",
+      "Sup"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Cassiopeia",
+    "roles": [
+      "Mid",
+      "Top"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Chogath",
+    "roles": [
+      "Top"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Corki",
+    "roles": [
+      "Mid",
+      "Adc"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Darius",
+    "roles": [
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Diana",
+    "roles": [
+      "Jgl",
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "DrMundo",
+    "roles": [
+      "Jgl",
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Draven",
+    "roles": [
+      "Adc"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Ekko",
+    "roles": [
+      "Jgl",
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Elise",
+    "roles": [
+      "Jgl",
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Evelynn",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Ezreal",
+    "roles": [
+      "Adc"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Fiddlesticks",
+    "roles": [
+      "Jgl",
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Fiora",
+    "roles": [
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Fizz",
+    "roles": [
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Galio",
+    "roles": [
+      "Top",
+      "Mid",
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Gangplank",
+    "roles": [
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Garen",
+    "roles": [
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Gnar",
+    "roles": [
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Gragas",
+    "roles": [
+      "Top",
+      "Jgl",
+      "Mid",
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Graves",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Gwen",
+    "roles": [
+      "Top",
+      "Jgl"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Hecarim",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Heimerdinger",
+    "roles": [
+      "Top",
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Illaoi",
+    "roles": [
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Irelia",
+    "roles": [
+      "Top",
+      "Mid"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Ivern",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Janna",
+    "roles": [
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "JarvanIV",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Jax",
+    "roles": [
+      "Top",
+      "Jgl"
+    ],
+    "damage": "AD, AP"
+  },
+  {
+    "name": "Jayce",
+    "roles": [
+      "Top",
+      "Mid"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Jhin",
+    "roles": [
+      "Adc"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Jinx",
+    "roles": [
+      "Adc"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Kaisa",
+    "roles": [
+      "Adc"
+    ],
+    "damage": "AD, AP"
+  },
+  {
+    "name": "Kalista",
+    "roles": [
+      "Adc"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Karma",
+    "roles": [
+      "Top",
+      "Mid",
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Karthus",
+    "roles": [
+      "Jgl",
+      "Adc"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Kassadin",
+    "roles": [
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Katarina",
+    "roles": [
+      "Mid"
+    ],
+    "damage": "AP, AD"
+  },
+  {
+    "name": "Kayle",
+    "roles": [
+      "Top"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Kayn",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Kennen",
+    "roles": [
+      "Top"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Kha'Zix",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Kindred",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Kled",
+    "roles": [
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "KogMaw",
+    "roles": [
+      "Adc",
+      "Mid"
+    ],
+    "damage": "AD, AP"
+  },
+  {
+    "name": "Leblanc",
+    "roles": [
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "LeeSin",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Leona",
+    "roles": [
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Lillia",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Lissandra",
+    "roles": [
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Lucian",
+    "roles": [
+      "Adc",
+      "Mid"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Lulu",
+    "roles": [
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Lux",
+    "roles": [
+      "Sup",
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Malphite",
+    "roles": [
+      "Top"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Malzahar",
+    "roles": [
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Maokai",
+    "roles": [
+      "Jgl",
+      "Sup",
+      "Top"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Master Yi",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Mel",
+    "roles": [
+      "Mid",
+      "Adc"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "MissFortune",
+    "roles": [
+      "Adc"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Mordekaiser",
+    "roles": [
+      "Top",
+      "Jgl"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Morgana",
+    "roles": [
+      "Jgl",
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Naafiri",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Nami",
+    "roles": [
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Nasus",
+    "roles": [
+      "Top",
+      "Mid"
+    ],
+    "damage": "AD, AP"
+  },
+  {
+    "name": "Nautilus",
+    "roles": [
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Neeko",
+    "roles": [
+      "Sup",
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Nidalee",
+    "roles": [
+      "Jgl",
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Nocturne",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Nunu",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Olaf",
+    "roles": [
+      "Top",
+      "Jgl"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Orianna",
+    "roles": [
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Ornn",
+    "roles": [
+      "Top"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Pantheon",
+    "roles": [
+      "Jgl",
+      "Top",
+      "Sup"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Poppy",
+    "roles": [
+      "Sup",
+      "Jgl",
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Pyke",
+    "roles": [
+      "Sup"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Qiyana",
+    "roles": [
+      "Mid"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Quinn",
+    "roles": [
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Rakan",
+    "roles": [
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Rammus",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Rek'Sai",
+    "roles": [
+      "Jgl",
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Rell",
+    "roles": [
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Renekton",
+    "roles": [
+      "Top",
+      "Mid"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Rengar",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Riven",
+    "roles": [
+      "Top",
+      "Mid"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Rumble",
+    "roles": [
+      "Top",
+      "Jgl"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Ryze",
+    "roles": [
+      "Mid",
+      "Top"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Samira",
+    "roles": [
+      "Adc"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Sejuani",
+    "roles": [
+      "Jgl",
+      "Top"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Senna",
+    "roles": [
+      "Sup",
+      "Adc"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Seraphine",
+    "roles": [
+      "Sup",
+      "Mid",
+      "Adc"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Sett",
+    "roles": [
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Shaco",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AD, AP"
+  },
+  {
+    "name": "Shen",
+    "roles": [
+      "Top",
+      "Sup"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Shyvana",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AD, AP"
+  },
+  {
+    "name": "Singed",
+    "roles": [
+      "Top"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Sion",
+    "roles": [
+      "Top",
+      "Mid"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Sivir",
+    "roles": [
+      "Adc"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Skarner",
+    "roles": [
+      "Jgl",
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Smolder",
+    "roles": [
+      "Adc",
+      "Mid"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Sona",
+    "roles": [
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Soraka",
+    "roles": [
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Swain",
+    "roles": [
+      "Mid",
+      "Top",
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Sylas",
+    "roles": [
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Syndra",
+    "roles": [
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "TahmKench",
+    "roles": [
+      "Sup",
+      "Top"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Taliyah",
+    "roles": [
+      "Mid",
+      "Jgl"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Talon",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Taric",
+    "roles": [
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Teemo",
+    "roles": [
+      "Top"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Thresh",
+    "roles": [
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Tristana",
+    "roles": [
+      "Adc",
+      "Mid"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Trundle",
+    "roles": [
+      "Jgl",
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Tryndamere",
+    "roles": [
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "TwistedFate",
+    "roles": [
+      "Top",
+      "Mid"
+    ],
+    "damage": "AD, AP"
+  },
+  {
+    "name": "Twitch",
+    "roles": [
+      "Adc"
+    ],
+    "damage": "AD, AP"
+  },
+  {
+    "name": "Udyr",
+    "roles": [
+      "Jgl",
+      "Top"
+    ],
+    "damage": "AD, AP"
+  },
+  {
+    "name": "Urgot",
+    "roles": [
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Varus",
+    "roles": [
+      "Adc"
+    ],
+    "damage": "AD, AP"
+  },
+  {
+    "name": "Vayne",
+    "roles": [
+      "Adc"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Veigar",
+    "roles": [
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Velkoz",
+    "roles": [
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Vi",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Viego",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Viktor",
+    "roles": [
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Vladimir",
+    "roles": [
+      "Mid",
+      "Top"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Volibear",
+    "roles": [
+      "Top",
+      "Jgl"
+    ],
+    "damage": "AD, AP"
+  },
+  {
+    "name": "Warwick",
+    "roles": [
+      "Jgl",
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "MonkeyKing",
+    "roles": [
+      "Jgl",
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Xayah",
+    "roles": [
+      "Adc"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Xerath",
+    "roles": [
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "XinZhao",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Yasuo",
+    "roles": [
+      "Mid",
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Yone",
+    "roles": [
+      "Mid",
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Yorick",
+    "roles": [
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Yuumi",
+    "roles": [
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Zac",
+    "roles": [
+      "Jgl",
+      "Top"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Zed",
+    "roles": [
+      "Mid",
+      "Jgl"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Ziggs",
+    "roles": [
+      "Adc",
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Zilean",
+    "roles": [
+      "Sup",
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Zoe",
+    "roles": [
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Zyra",
+    "roles": [
+      "Jgl",
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Akshan",
+    "roles": [
+      "Mid"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Vex",
+    "roles": [
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Zeri",
+    "roles": [
+      "Adc"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "KSante",
+    "roles": [
+      "Top"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Renata",
+    "roles": [
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Hwei",
+    "roles": [
+      "Mid"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Briar",
+    "roles": [
+      "Jgl"
+    ],
+    "damage": "AD"
+  },
+  {
+    "name": "Milio",
+    "roles": [
+      "Sup"
+    ],
+    "damage": "AP"
+  },
+  {
+    "name": "Nilah",
+    "roles": [
+      "Adc"
+    ],
+    "damage": "AD"
+  }
+]
