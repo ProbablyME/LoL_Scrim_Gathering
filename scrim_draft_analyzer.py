@@ -706,6 +706,7 @@ class ScrimDraftAnalyzer:
         winning_team = None
         team_one_name = None
         team_two_name = None
+        game_version = None
         
         # Collect team compositions for role assignment
         team_one_composition = {}  # participant_id -> (champion_name, champion_id)
@@ -718,6 +719,10 @@ class ScrimDraftAnalyzer:
                 for line_num, line in enumerate(f, 1):
                     try:
                         data = json.loads(line)
+                        
+                        # Extract game version if available and not already set
+                        if not game_version and 'gameVersion' in data:
+                            game_version = data.get('gameVersion')
                         
                         # Check for game end event
                         if data.get('rfc461Schema') == 'game_end':
@@ -890,7 +895,8 @@ class ScrimDraftAnalyzer:
                     'name': team_two_name or 'Team2', 
                     'picks': [(p['player'], p['champion'], p['role']) for p in team_two_picks]
                 },
-                'winner': winner
+                'winner': winner,
+                'game_version': game_version
             }
             
         except Exception as e:
@@ -934,6 +940,7 @@ class ScrimDraftAnalyzer:
             series_date,
             team1['name'],
             team2['name'],
+            draft_data.get('game_version', ''),  # Patch column
             # First ban phase (1-3)
             blue_bans[0] if len(blue_bans) > 0 else '',  # Blue ban 1
             red_bans[0] if len(red_bans) > 0 else '',   # Red ban 1
@@ -989,7 +996,7 @@ class ScrimDraftAnalyzer:
         try:
             # Prepare header row - matching the new column order
             headers = [
-                'Series ID', 'Date', 'Blue Team', 'Red Team',
+                'Series ID', 'Date', 'Blue Team', 'Red Team', 'Patch',
                 'Blue Ban 1', 'Red Ban 1', 'Blue Ban 2', 'Red Ban 2', 'Blue Ban 3', 'Red Ban 3',
                 'Blue Pick 1', 'Red Pick 1', 'Red Pick 2', 'Blue Pick 2', 'Blue Pick 3', 'Red Pick 3',
                 'Red Ban 4', 'Blue Ban 4', 'Red Ban 5', 'Blue Ban 5',
@@ -1076,7 +1083,7 @@ class ScrimDraftAnalyzer:
                             "sheetId": 0,
                             "dimension": "COLUMNS",
                             "startIndex": 0,
-                            "endIndex": 35
+                            "endIndex": 36
                         }
                     }
                 }
